@@ -80,14 +80,15 @@ exports.getBetweenMessages = async (req, res) => {
         }
 
         const messages = await channel.messages.fetch({ limit: 100 });
-
-        const startDate = new Date(start);
-        const endDate = new Date(end);
-
+        let datas = [start, end]
         const filtredMessage = messages.
             filter(msg => {
                 const msgDate = new Date(msg.createdAt);
-                return msgDate >= startDate && msgDate <= endDate;
+                const msgDateFormated = msgDate.toISOString().split('T')[0]; // data que a mensagem foi enviada
+                const startDate = new Date(start).toISOString().split('T')[0]; // data inicial
+                const endDate = new Date(end).toISOString().split('T')[0]; // data final
+                
+                return msgDateFormated >= startDate && msgDateFormated <= endDate;
             })
             .map(msg => ({
                 author: msg.author.tag,
@@ -97,8 +98,10 @@ exports.getBetweenMessages = async (req, res) => {
 
         res.status(200).json({
             success: true,
+            datas: datas,
             message: 'Mensagens: ',
             messages: filtredMessage
+
         });
         
     } catch (error) {

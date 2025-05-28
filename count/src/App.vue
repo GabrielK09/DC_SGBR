@@ -17,7 +17,6 @@ import SideBar from 'src/layouts/SideBar.vue';
     flex: 1;
     padding: 2rem;
     
-    color: white;
     min-height: 100vh;
   }
 }

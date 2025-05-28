@@ -107,6 +107,14 @@
                 }
             });
             
+            console.log('Res: ', res.data)
+
+            const messageData: msgType[] = res.data.messages;
+            messages.value = messageData;
+
+            const count = messages.value.filter(m => m.message.toLowerCase().includes(option.value.value)).length;
+            group.value = option.value.group
+            countPuxei.value += count;
         }
     }
 

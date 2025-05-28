@@ -4,24 +4,27 @@
             @submit="acessLogin"
             class="q-gutter-md forms"
         >
-            <h2>Login</h2>
+            <h3>Login</h3>
             <div class="bar"></div>
         
             <q-input 
                 v-model="cpf" 
                 type="text" 
                 label="CPF" 
-                input-class="centered-input"
-
-
+                color="cyan"
+                :rules="[
+                    val => !!val || 'O CPF é obrigatório'
+                ]"
             />
             
             <q-input 
                 v-model="password" 
                 type="password" 
                 label="Senha"
-                input-class="centered-input"
-
+                color="cyan"
+                :rules="[
+                    val => !!val || 'A senha é obrigatória'
+                ]"
             />
 
             <div>
@@ -80,7 +83,9 @@
 
     .bar{
         border-bottom: solid 1px #ccc;
+
     }
+
     .container-form{ 
         display: flex;
         justify-content: center;
@@ -99,4 +104,9 @@
         }
     }
 
+    .q-html-input__ {
+        background-color: #000;
+    }
+
+    
 </style>

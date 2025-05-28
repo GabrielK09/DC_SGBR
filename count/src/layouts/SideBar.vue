@@ -4,8 +4,23 @@
             v-if="user"
         />
         
-        <ul>
-            <li><router-link to="/counter"></router-link></li>
+        <ul class="ul-itens">
+            <li class="link">
+                <router-link to="/counter" class="links">Contagem de ligações</router-link>
+            </li>
+
+            <li class="link">
+                <router-link to="/a" class="links">Teste</router-link>
+            </li>
+
+            <li class="btn-logout">
+                <q-btn 
+                    color="cyan" 
+                    icon="logout" 
+                    label="Sair" 
+                    @click="logout" 
+                />
+            </li>
         </ul>
         
         
@@ -20,8 +35,20 @@
     import { LocalStorage } from 'quasar';
     import Images from 'src/components/Images.vue';
     import { ref, onMounted } from 'vue';
+    import { useRouter } from 'vue-router';
 
     const user = ref<string>('')
+    const route = useRouter();
+
+    const logout = () => {
+        LocalStorage.removeItem("user")
+        const confirmed = confirm('Deseja realmente sair?')
+        if(confirmed)
+        {
+            route.push('/')
+
+        }
+    }
 
     onMounted(() => {
         const userStored = LocalStorage.getItem("user") as string | null
@@ -42,8 +69,22 @@
         width: 15rem;
         height: 100vh;
 
-        ul {
-            color: #fff;
+        .ul-itens {
+            .link {
+                padding: 5px;
+            }
+
+            li .links {
+                text-decoration: none;
+                color: #fff;
+                display: inline-block;
+                transition: color 0.3s ease, transform 0.3s ease;   
+            }
+
+            .btn-logout {
+                position: fixed;
+                bottom: 10px;
+            }
         }
 
         img {

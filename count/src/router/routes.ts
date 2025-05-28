@@ -11,7 +11,8 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '/counter',
-        component: () => import('pages/IndexPage.vue')
+        component: () => import('pages/CountCall.vue'),
+        name: 'CountCall'
 
       }
     ]
