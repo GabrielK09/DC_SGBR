@@ -58,7 +58,7 @@ exports.getAllMessages = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Erro interno',
-            erro: error
+            erro: error.message
             
         });
 
