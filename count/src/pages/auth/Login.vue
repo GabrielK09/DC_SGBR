@@ -53,14 +53,15 @@
             });
 
             const data = res.data.user
+            console.log(data)
 
             LocalStorage.set("user", data.apelido)            
         } catch (error) {
-            
+            console.error('Erro: ', error)
             
         } finally {
             route.push('/home')
-            window.location.reload()
+            
 
         }
     }
@@ -85,6 +86,8 @@
         justify-content: center;
         position: relative;
         top: 150px;
+        left: 33rem;
+        right: auto;
     }
 
     .forms{

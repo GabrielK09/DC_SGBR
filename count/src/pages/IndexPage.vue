@@ -45,6 +45,7 @@
     import { LocalStorage } from 'quasar';
     import { api } from 'src/boot/axios';
     import { ref, onMounted } from 'vue';
+    import { useRouter } from 'vue-router'
 
     type msgType = {
         author: string,
@@ -66,6 +67,7 @@
 
     ]); 
 
+    const route = useRouter()
     const messages = ref<msgType[]>([]);    
     const countPuxei = ref(0);
     const group = ref(null);
@@ -109,7 +111,11 @@
     }
 
     onMounted(() => {
-        
+        const user = LocalStorage.getItem("user")
+        if(!user)
+        {
+            route.push('/login')
+        }
     })
 
 </script>

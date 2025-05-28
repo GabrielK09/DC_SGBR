@@ -2,7 +2,8 @@ const express = require('express')
 const cors = require('cors')
 const dcController = require('./dcController/dcService.ts')
 const app = express();
-const PORT = 3000
+require('dotenv').config();
+const PORT = process.env.PORT
 
 app.use(express.json())
 app.use(cors())

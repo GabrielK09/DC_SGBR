@@ -1,5 +1,6 @@
 const { Client, GatewayIntentBits, Message } = require('discord.js')
 const fs = require('fs');
+require('dotenv').config()
 
 const client = new Client({
     intents: [
@@ -9,14 +10,15 @@ const client = new Client({
     ]
 });
 
-const channelID = '1376596821547417823';
+const channelID = process.env.CHANNEL_ID;
 
 client.once('ready', async () => {
     console.log(`Bot conectado como ${client.user.tag}`);
 
 });
 
-client.login('MTM3NjU5NjEyMDA2MjY2MDczMA.GitRXH.uLR3fcnljCERyj0ws6I-P-f4KX_1bwh9Ypc034');
+// Token do bot
+client.login(process.env.BOT_TOKEN); 
 
 exports.getAllMessages = async (req, res) => {
     try {

@@ -1,11 +1,17 @@
 <template>
     <div class="side-bar">
-        <div class="container">
-            <Images
-                v-if="user"
-            />
+        <Images
+            v-if="user"
+        />
+        
+        <ul>
+            <li><router-link to="/counter"></router-link></li>
+        </ul>
+        
+    </div>
+    <div class="router-view">
+        <router-view />
 
-        </div>
     </div>
 </template>
 
@@ -35,8 +41,8 @@
         width: 15rem;
         height: 100vh;
 
-        .container {
-            margin: 15px 0 0 0;
+        ul {
+            color: #fff;
         }
 
         img {
@@ -47,5 +53,9 @@
             margin: 15px;
 
         }
+    }
+
+    .router-view{
+        margin: 20px 0 0 1rem;
     }
 </style>

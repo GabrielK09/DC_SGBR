@@ -7,7 +7,14 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/home', 
-    component: () => import('pages/IndexPage.vue')
+    component: () => import('layouts/SideBar.vue'),
+    children: [
+      {
+        path: '/counter',
+        component: () => import('pages/IndexPage.vue')
+
+      }
+    ]
   },
   {
     path: '/:catchAll(.*)*',

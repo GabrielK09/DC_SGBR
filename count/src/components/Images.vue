@@ -38,7 +38,6 @@
                 break;
         
             default:
-                console.log('Bateu no default')
                 break;
         }
     }
