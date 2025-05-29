@@ -5,10 +5,7 @@
             type="text" 
             label="Mensagem para envio" 
             class="msg-input"
-            ref="msg"
-            :rules="[
-                val => !!val || 'Digite a sua mensagem para envio!'
-            ]"
+            
         />
 
         <div class="fix-amount">
@@ -39,6 +36,15 @@
 
             />
 
+            <q-btn 
+                color="primary"
+                label="+12" 
+                @click="sendMessage(12)" 
+                class="btn-fix"
+                :disable="!message.trim()"
+
+            />
+
             <q-input 
                 v-model.number="amount" 
                 type="number" 
@@ -57,15 +63,21 @@
                 :disable="!message.trim()"
 
             />
+
+            <div class="success" v-if="successMessage" @click="successMessage = ''">
+                {{ successMessage }}
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+    import { LocalStorage } from 'quasar';
     import { api } from 'src/boot/axios';
     import { ref } from 'vue'
 
     const message = ref<string>('');
+    const successMessage = ref<string>('');
     const amount = ref<number>(0);
 
     const sendMessage = async (fixAmount: number|null) => {
@@ -77,10 +89,18 @@
     
             }, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "user-token": LocalStorage.getItem("user")
+
                 }
             })
-            console.log('Res: ', res.data)
+            message.value = '';
+            amount.value = 0;
+
+            if(res.data.success)
+            {
+                successMessage.value = res.data.message
+            }
         } else {
             console.error('If ta errado')
         }
@@ -102,6 +122,17 @@
             .btn-fix{
                 margin: 0 10px 0 10px;
             }
+        }
+
+        .success {
+            margin: 10px 0 0 0;
+            color: #fff;
+            background-color: #53DD6C;
+            width: max-content;
+            padding: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+
         }
     }
 

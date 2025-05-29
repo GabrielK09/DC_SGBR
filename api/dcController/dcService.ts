@@ -1,5 +1,7 @@
-const { Client, GatewayIntentBits, Message } = require('discord.js')
-const fs = require('fs');
+import { Client, GatewayIntentBits, TextChannel } from 'discord.js'
+
+import * as fs from 'fs';
+
 require('dotenv').config()
 
 const client = new Client({
@@ -132,15 +134,18 @@ exports.sendMessage = async (req, res) => {
 
     let { message, amount } = req.body;
     const auxAmount = amount
-    const channel = await client.channels.fetch(channelID);
 
-    if(!channel)
+    const channelFetch = await client.channels.fetch(channelID);
+
+    if(!channelFetch)
     {
         return res.status(404).json({
             success: false,
             message: 'Canal não encontrado'
         });
     }
+
+    const channel = channelFetch as TextChannel;
 
     try {
         while (amount > 0) {
@@ -159,7 +164,7 @@ exports.sendMessage = async (req, res) => {
     } finally {
         res.status(200).json({
             success: true,
-            message: `As ${auxAmount} Mensagens foram enviadas!`
+            message: `Todas as ${auxAmount} mensagens foram enviadas!`
         });
     }
 }

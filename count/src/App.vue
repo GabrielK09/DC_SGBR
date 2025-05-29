@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import SideBar from 'src/layouts/SideBar.vue';
+
 </script>
 
 <style lang="scss">

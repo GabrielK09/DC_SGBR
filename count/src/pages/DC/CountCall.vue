@@ -27,6 +27,7 @@
             @update:model-value="showBtn"
             filled 
         />
+
         <div class="container-btn" v-if="showButton">
             <q-btn 
                 class="btn-check"
@@ -92,7 +93,13 @@
         group.value = null;
         countPuxei.value = 0;
         
-        const res = await api.get('/messages');
+        const res = await api.get('/messages', {
+            headers: {
+                "Content-Type": "application/json",
+                "user-token": LocalStorage.getItem("user")
+                
+            }
+        });
 
         if(res.data.success && !start.value && !end.value)
         {
@@ -112,7 +119,9 @@
                 end: formatDate(end.value)
             }, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "user-token": LocalStorage.getItem("user")
+                    
                 }
             });
             
