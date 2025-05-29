@@ -10,7 +10,18 @@
             </li>
 
             <li class="link">
-                <router-link to="/a" class="links">Teste</router-link>
+                <router-link to="/send-message" class="links">Enviar mensagem</router-link>
+            </li>
+
+            <li class="link">
+                <NotifyQuestion
+                    :amount="amountNotify"
+
+                />
+            </li>
+            
+            <li class="link">
+                <router-link to="/all" class="links">Geral</router-link>
             </li>
 
             <li class="btn-logout">
@@ -34,11 +45,14 @@
 <script setup lang="ts">
     import { LocalStorage } from 'quasar';
     import Images from 'src/components/Images.vue';
+    import NotifyQuestion from 'src/components/NotifyQuestion.vue';
     import { ref, onMounted } from 'vue';
     import { useRouter } from 'vue-router';
 
-    const user = ref<string>('')
     const route = useRouter();
+    const user = ref<string>('')
+
+    const amountNotify = ref<number>(0);
 
     const logout = () => {
         LocalStorage.removeItem("user")
@@ -79,6 +93,25 @@
                 color: #fff;
                 display: inline-block;
                 transition: color 0.3s ease, transform 0.3s ease;   
+            }
+
+            .circle {
+                position: relative;
+                text-align: center;
+                left: 78px;
+                bottom: 30px;
+                height: 18px;
+                width: 18px;
+                border-radius: 50px;
+                z-index: 50;
+                background-color: red;
+                margin: 0 0 -15px 0;
+
+                .count {         
+                    
+                    bottom: 1px;
+                    color: #fff;
+                }
             }
 
             .btn-logout {

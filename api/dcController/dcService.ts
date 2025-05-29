@@ -20,6 +20,15 @@ client.once('ready', async () => {
 // Token do bot
 client.login(process.env.BOT_TOKEN); 
 
+function formatDate (dateStr) {
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`
+    
+}
+
 exports.getAllMessages = async (req, res) => {
     try {
         const channel = await client.channels.fetch(channelID);
@@ -68,8 +77,9 @@ exports.getAllMessages = async (req, res) => {
 exports.getBetweenMessages = async (req, res) => {
     const { start, end } = req.body;
     
+    const channel = await client.channels.fetch(channelID);
+
     try {
-        const channel = await client.channels.fetch(channelID);
 
         if(!channel.isTextBased())
         {
@@ -80,27 +90,31 @@ exports.getBetweenMessages = async (req, res) => {
         }
 
         const messages = await channel.messages.fetch({ limit: 100 });
-        let datas = [start, end]
+
         const filtredMessage = messages.
             filter(msg => {
-                const msgDate = new Date(msg.createdAt);
-                const msgDateFormated = msgDate.toISOString().split('T')[0]; // data que a mensagem foi enviada
-                const startDate = new Date(start).toISOString().split('T')[0]; // data inicial
-                const endDate = new Date(end).toISOString().split('T')[0]; // data final
+                fs.appendFile('log/logs.log', `Data de criação da mensagem: ${formatDate(msg.createdAt)}\n`, function (err) {
+                    if(err) throw err;
+
+                });
+
+                return formatDate(msg.createdAt) >= start && formatDate(msg.createdAt) <= end && msg.content.toLowerCase().includes('puxei')
                 
-                return msgDateFormated >= startDate && msgDateFormated <= endDate;
             })
+
             .map(msg => ({
                 author: msg.author.tag,
                 message: msg.content,
-                date: msg.createdAt.toLocaleString('pt-BR')
+                date: msg.createdAt.toLocaleString('pt-BR'),
+
             }));
 
         res.status(200).json({
             success: true,
-            datas: datas,
             message: 'Mensagens: ',
-            messages: filtredMessage
+            messages: filtredMessage,
+            startDate: start,
+            endDate: end,
 
         });
         
@@ -109,9 +123,43 @@ exports.getBetweenMessages = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Erro interno',
-            erro: error
 
         });
     }
 }
 
+exports.sendMessage = async (req, res) => {
+
+    let { message, amount } = req.body;
+    const auxAmount = amount
+    const channel = await client.channels.fetch(channelID);
+
+    if(!channel)
+    {
+        return res.status(404).json({
+            success: false,
+            message: 'Canal não encontrado'
+        });
+    }
+
+    try {
+        while (amount > 0) {
+            amount -= 1;
+            channel.send(message);
+            
+        };
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Houve um erro durante o envio: ',
+            erro: error
+        });
+
+    } finally {
+        res.status(200).json({
+            success: true,
+            message: `As ${auxAmount} Mensagens foram enviadas!`
+        });
+    }
+}

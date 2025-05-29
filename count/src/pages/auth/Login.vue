@@ -78,7 +78,7 @@
 <style lang="scss">
     h2 {
         color: #000;
-        margin: 0 0 0;
+        
     }
 
     .bar{
@@ -87,20 +87,26 @@
     }
 
     .container-form{ 
+        width: 100vw;
+        height: 70vh;
         display: flex;
+        flex-direction: row;
+        align-items: center;
         justify-content: center;
-        position: relative;
-        top: 150px;
-        left: 33rem;
-        right: auto;
+        
+
     }
 
     .forms{
-        width: 20rem;
+        width: 25rem;
         text-align: center;
+        border: solid #ccc;
+        border-radius: 10px;
+        padding: 2rem;
 
         .btn-s{
             background: #23B5D3;
+            color: #fff;
         }
     }
 

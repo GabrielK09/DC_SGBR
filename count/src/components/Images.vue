@@ -28,7 +28,7 @@
                 urlImg.value = "https://media-gru2-2.cdn.whatsapp.net/v/t61.24694-24/422466784_1407055789936565_3353322438069270532_n.jpg?ccb=11-4&oh=01_Q5Aa1gGf6CNnoxmvr9zyIOLq5kII0ppVgW_8utA5_JiNnJl9Og&oe=6841E77B&_nc_sid=5e03e0&_nc_cat=106";
                 break;
 
-            case 'GUILHERME':
+            case 'GUILHERME R':
                 urlImg.value = "https://media-gru2-2.cdn.whatsapp.net/v/t61.24694-24/430247043_945126050606392_1870397334104195703_n.jpg?ccb=11-4&oh=01_Q5Aa1gEZJV9oQ2Aje02N8q2sEgfu6YBojIz8Ij_ci2s7bHWKqw&oe=68421113&_nc_sid=5e03e0&_nc_cat=109";
                 break;
 

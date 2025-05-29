@@ -79,11 +79,20 @@
         showButton.value = true
     }
 
+    const formatDate = (dateStr: string) => {
+        const date = new Date(dateStr);
+        const day = String(date.getDate() + 1).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`
+        
+    }
+
     const count = async () => {
         group.value = null;
         countPuxei.value = 0;
-
-        const res = await api.get('http://localhost:3000/messages');
+        
+        const res = await api.get('/messages');
 
         if(res.data.success && !start.value && !end.value)
         {
@@ -91,16 +100,16 @@
             messages.value = messageData;
 
             const count = messages.value.filter(m => m.message.toLowerCase().includes(option.value.value)).length;
-
+            
             group.value = option.value.group
             countPuxei.value += count
         }
 
         if(start.value && end.value)
         {
-            const res = await api.post('http://localhost:3000/messages-between', {
-                start: start.value,
-                end: start.value
+            const res = await api.post('/messages-between', {
+                start: formatDate(start.value),
+                end: formatDate(end.value)
             }, {
                 headers: {
                     "Content-Type": "application/json"
@@ -122,7 +131,7 @@
         const user = LocalStorage.getItem("user")
         if(!user)
         {
-            route.push('/login')
+            route.push('/')
         }
     })
 
