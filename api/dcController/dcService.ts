@@ -1,5 +1,4 @@
 import { Client, GatewayIntentBits, TextChannel } from 'discord.js'
-
 import * as fs from 'fs';
 
 require('dotenv').config()

@@ -35,6 +35,14 @@
                 @click="count" 
             />
 
+            <div class="loandig" v-if="loandig">
+                Buscando dados ...
+            </div>
+
+            <div class="error" v-if="errorMessage">
+                {{ errorMessage }}
+            </div>
+
             <div v-if="countPuxei >= 0 && group" class="count-area">
                 <span>Quantia total: {{ countPuxei }} da equipe: {{ group }}</span>
             </div>
@@ -54,8 +62,9 @@
         date: string
     }
 
-    const showButton: any = ref(false);
-    const option: any = ref(null);
+    const loandig: any = ref<boolean>(false);
+    const showButton: any = ref<boolean>(false);
+    const option: any = ref<null>(null);
     const options = ref([
         { label: '🔵', value: '🔵', group: 'Azul' },
         { label: '🟢', value: '🟢', group: 'Verde' },
@@ -69,7 +78,9 @@
     ]); 
 
     const route = useRouter()
-    const messages = ref<msgType[]>([]);    
+    const messages = ref<msgType[]>([]);
+    const errorMessage = ref<string>('');
+    
     const countPuxei = ref(0);
     const group = ref(null);
 
@@ -92,50 +103,61 @@
     const count = async () => {
         group.value = null;
         countPuxei.value = 0;
-        
-        const res = await api.get('/messages', {
-            headers: {
-                "Content-Type": "application/json",
-                "user-token": LocalStorage.getItem("user")
-                
-            }
-        });
+        loandig.value = true;
 
-        if(res.data.success && !start.value && !end.value)
-        {
-            const messageData: msgType[] = res.data.messages;
-            messages.value = messageData;
-
-            const count = messages.value.filter(m => m.message.toLowerCase().includes(option.value.value)).length;
-            
-            group.value = option.value.group
-            countPuxei.value += count
-        }
-
-        if(start.value && end.value)
-        {
-            const res = await api.post('/messages-between', {
-                start: formatDate(start.value),
-                end: formatDate(end.value)
-            }, {
+        try {
+            const res = await api.get('/messages', {
                 headers: {
                     "Content-Type": "application/json",
                     "user-token": LocalStorage.getItem("user")
                     
                 }
             });
+
+            if(res.data.success && !start.value && !end.value)
+            {
+                const messageData: msgType[] = res.data.messages;
+                messages.value = messageData;
+                
+                const count = messages.value.filter(m => m.message.toLowerCase().includes(option.value.value)).length;
+                
+                group.value = option.value.group
+                countPuxei.value += count
+            }
             
-            console.log('Res: ', res.data)
-
-            const messageData: msgType[] = res.data.messages;
-            messages.value = messageData;
-
-            const count = messages.value.filter(m => m.message.toLowerCase().includes(option.value.value)).length;
-            group.value = option.value.group
-            countPuxei.value += count;
+            if(start.value && end.value)
+            {
+                const res = await api.post('/messages-between', {
+                    start: formatDate(start.value),
+                    end: formatDate(end.value)
+                }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "user-token": LocalStorage.getItem("user")
+                        
+                    }
+                });
+                
+                console.log('Res: ', res.data)
+                
+                const messageData: msgType[] = res.data.messages;
+                messages.value = messageData;
+                
+                const count = messages.value.filter(m => m.message.toLowerCase().includes(option.value.value)).length;
+                group.value = option.value.group
+                countPuxei.value += count;
+            }
+        } catch (error) {
+            errorMessage.value = error as string
+            option.value = ''
+            start.value = null
+            end.value = null
+            
+        } finally {
+            loandig.value = false
         }
     }
-
+    
     onMounted(() => {
         const user = LocalStorage.getItem("user")
         if(!user)
@@ -174,5 +196,14 @@
         color: #fff;
         background-color: #279AF1;
 
+    }
+
+    .error {
+        background-color: #F05D5E;
+        width: max-content;
+        margin: 15px 0 0 0;
+        border-radius: 5px;
+        padding: 10px;
+        color: #fff;
     }
 </style>

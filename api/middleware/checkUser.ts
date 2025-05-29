@@ -2,27 +2,36 @@ import * as fs from 'fs';
 
 export function checkAuthUser(req, res, next)
 {
-    console.log('Req:', req)
-    console.log('Res:', res)
+    try {
+        fs.appendFile('log/logs.log', `Começo da validação do token dentro do try: \n`, function (err) {
+            if(err) throw err;
+        });
+
+        const userToken = req.headers['user-token'];
     
-    const userToken = req.headers['user-token'];
+        if(!userToken)
+        {
+            
+            return res.status(401).json({
+                success: false,
+                message: 'Usuário não autenticado'
+    
+            })
+        }
 
-    fs.appendFile('log/logs.log', `Começo da va`, function (err) {
-        if(err) throw err;
-
-    });
-
-    if(!userToken)
-    {
+        req.user = userToken;
         
-        return res.status(401).json({
-            success: false,
-            message: 'Usuário não autenticado'
+    } catch (error) {
+        fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
+            if(err) throw err;
+        });
+        
+    } finally {
+        fs.appendFile('log/logs.log', `Fim da validação do token\n`, function (err) {
+            if(err) throw err;
+        });
+        next();
 
-        })
     }
-
-    req.user = userToken;
-    next();
     
 }

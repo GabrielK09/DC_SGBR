@@ -24,6 +24,6 @@ app.get('/api/discord/messages', middleware.checkAuthUser, dcController.getAllMe
 app.post('/api/discord/send-message', middleware.checkAuthUser, dcController.sendMessage)
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Rodando na porta: http://192.168.98.18:${PORT}`);
+    console.log(`Rodando na porta: http://192.168.199.50:${PORT}`);
 
 });
