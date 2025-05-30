@@ -1,5 +1,6 @@
 import { Client, GatewayIntentBits, TextChannel } from 'discord.js'
 import * as fs from 'fs';
+import { format } from 'date-fns'
 
 require('dotenv').config()
 
@@ -21,15 +22,6 @@ client.once('ready', async () => {
 
 // Token do bot
 client.login(process.env.BOT_TOKEN); 
-
-function formatDate (dateStr) {
-    const date = new Date(dateStr);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`
-    
-}
 
 function winners() 
 {
@@ -152,12 +144,12 @@ exports.getBetweenMessages = async (req, res) => {
 
         const filtredMessage = messages.
             filter(msg => {
-                fs.appendFile('log/logs.log', `Data de criação da mensagem: ${formatDate(msg.createdAt)}\n`, function (err) {
+                fs.appendFile('log/logs.log', `Data de criação da mensagem: ${format(msg.createdAt, 'dd-MM-yyyy')}\n`, function (err) {
                     if(err) throw err;
 
                 });
 
-                return formatDate(msg.createdAt) >= start && formatDate(msg.createdAt) <= end && msg.content.toLowerCase().includes('puxei')
+                return format(msg.createdAt, 'dd-MM-yyyy') >= start && format(msg.createdAt, 'dd-MM-yyyy') <= end && msg.content.toLowerCase().includes('puxei')
                 
             })
 

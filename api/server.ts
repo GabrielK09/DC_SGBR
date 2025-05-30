@@ -27,6 +27,6 @@ app.post('/api/discord/messages-between', middleware.checkAuthUser, dcController
 app.post('/api/discord/send-message', middleware.checkAuthUser, dcController.sendMessage)
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Rodando na porta: http://${process.env.SERVER}:${PORT}`);
+    console.log(`Rodando na porta: http://${process.env.URL}:${PORT}`);
 
 });

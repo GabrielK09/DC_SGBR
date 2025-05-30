@@ -55,6 +55,7 @@
     import { api } from 'src/boot/axios';
     import { ref, onMounted } from 'vue';
     import { useRouter } from 'vue-router'
+    import { format } from 'date-fns';
 
     type msgType = {
         author: string,
@@ -93,7 +94,7 @@
 
     const formatDate = (dateStr: string) => {
         const date = new Date(dateStr);
-        const day = String(date.getDate() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
         return `${day}/${month}/${year}`
@@ -105,6 +106,13 @@
         countPuxei.value = 0;
         loandig.value = true;
 
+        const startDate = new Date(start.value + 'T00:00:00');
+        const endDate = new Date(end.value + 'T00:00:00');
+
+        console.log('start', format(startDate, 'dd/MM/yyyy'));
+        console.log('end', format(endDate, 'dd/MM/yyyy'));
+
+        /*
         try {
             if(!start.value && !end.value)
             {
@@ -156,7 +164,7 @@
             
         } finally {
             loandig.value = false
-        }
+        }*/
     }
     
     onMounted(() => {
