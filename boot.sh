@@ -1,7 +1,7 @@
 main()
 {
-	frontend_path="D:/Gabriel/Projetos/SGBR/5_DC_SGBR/count"
-	api_path="D:/Gabriel/Projetos/SGBR/5_DC_SGBR/api"
+	frontend_path="C:/Gabriel/Projetos/SGBR/5_DC_SGBR/count"
+	api_path="C:/Gabriel/Projetos/SGBR/5_DC_SGBR/api"
 	
 	cd $frontend_path
 	start bash -c "quasar dev"

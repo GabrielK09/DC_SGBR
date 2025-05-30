@@ -106,16 +106,17 @@
         loandig.value = true;
 
         try {
-            const res = await api.get('/messages', {
-                headers: {
-                    "Content-Type": "application/json",
-                    "user-token": LocalStorage.getItem("user")
-                    
-                }
-            });
-
-            if(res.data.success && !start.value && !end.value)
+            if(!start.value && !end.value)
             {
+                const res = await api.get('/messages', {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "user-token": LocalStorage.getItem("user")
+                        
+                    }
+                });
+
+                console.log('Buscando sem filtro')
                 const messageData: msgType[] = res.data.messages;
                 messages.value = messageData;
                 

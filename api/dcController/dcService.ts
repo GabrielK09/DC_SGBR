@@ -31,6 +31,11 @@ function formatDate (dateStr) {
     
 }
 
+function winners() 
+{
+
+}
+
 exports.getRecorentMessages = async (req, res) => 
 {
     const channel = await client.channels.fetch(channelID);
@@ -45,26 +50,42 @@ exports.getRecorentMessages = async (req, res) =>
 
     const messages = await channel.messages.fetch({ limit: 100 });
 
-    try {
-        res.status(200).json({
-            success: true,
-            messages: messages
+    const satMessages = messages
                       .filter(msg => msg.content.toLowerCase().includes('sat'))
                       .map(msg => ({
                             author: msg.author.tag,
                             message: msg.content,
                             date: msg.createdAt.toLocaleString('pt-BR')
-                      }))
+                      }));
+
+    const nfces = ['nfce', 'nfc-e']
+    const nfceMessages = messages
+                      .filter(msg => 
+                                nfces.some(nfce => msg.content.toLowerCase().includes(nfce))
+                            )
+                      .map(msg => ({
+                            author: msg.author.tag,
+                            message: msg.content,
+                            date: msg.createdAt.toLocaleString('pt-BR')
+                      }));
+    
+    try {
+        res.status(200).json({
+            success: true,
+            satMessages: satMessages,
+            nfceMessages: nfceMessages
         });
 
     } catch (error) {
-        
+        fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
+            if(err) throw err;
+        });
     }
-
 }
 
 exports.getAllMessages = async (req, res) => {
     try {
+        fs.appendFile
         const channel = await client.channels.fetch(channelID);
 
         if(!channel.isTextBased())
@@ -97,7 +118,11 @@ exports.getAllMessages = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Erro: ', error);
+        fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
+            if(err) throw err;
+
+        });
+
         res.status(500).json({
             success: false,
             message: 'Erro interno',
@@ -153,7 +178,9 @@ exports.getBetweenMessages = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Erro: ', error);
+        fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
+            if(err) throw err;
+        });
         res.status(500).json({
             success: false,
             message: 'Erro interno',
@@ -186,6 +213,10 @@ exports.sendMessage = async (req, res) => {
         };
         
     } catch (error) {
+        fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
+            if(err) throw err;
+            
+        });
         return res.status(500).json({
             success: false,
             message: 'Houve um erro durante o envio: ',

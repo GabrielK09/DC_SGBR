@@ -31,7 +31,6 @@ export function checkAuthUser(req, res, next)
             if(err) throw err;
         });
         next();
-
     }
     
 }

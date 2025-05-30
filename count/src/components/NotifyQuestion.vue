@@ -24,24 +24,36 @@
 
     }>()
 
+    let intervalID;
+
     const monitore = async () => {
         console.log('Carregando novas mensagens ...')
-        /*const res = await api.get('/recorent-messages', {
+        const res = await api.get('/recorent-messages', {
             headers: {
                 "Content-Type": "application/json",
                 "user-token": LocalStorage.getItem("user")
                 
             }
-        });*/
+        });
 
-        const messages = res.data.messages;
+        const satMessages = res.data.satMessages;
+        const nfceMessages = res.data.nfceMessages;
+
         let satCount: string[] = [];
+        let nfceCount: string[] = [];
 
-        messages.forEach((msg: Msg) => {
+        satMessages.forEach((msg: Msg) => {
             satCount.push(msg.message);
 
         });
-        console.log('satCount', satCount)
+
+        nfceMessages.forEach((msg: Msg) => {
+            nfceCount.push(msg.message);
+
+        });
+
+        console.log('satCount', satCount);
+        console.log('nfceCount', nfceCount);
 
         return;
     }
@@ -50,7 +62,7 @@
         const user = LocalStorage.getItem("user")
         if(user)
         {
-            setInterval(monitore, 8000);
+            //setInterval(monitore, 8000);
 
         }
         console.log('Carregou o notity');
