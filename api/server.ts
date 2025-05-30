@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dcController = require('./dcController/dcService.ts');
 const middleware = require('./middleware/checkUser.ts');
+
 const app = express();
 require('dotenv').config();
 const PORT = process.env.PORT
@@ -17,13 +18,15 @@ app.get('/api/discord/up', (req, res) => {
     });
 });
 
-app.post('/api/discord/messages-between', middleware.checkAuthUser, dcController.getBetweenMessages)
-
 app.get('/api/discord/messages', middleware.checkAuthUser, dcController.getAllMessages)
+
+app.get('/api/discord/recorent-messages', middleware.checkAuthUser, dcController.getRecorentMessages)
+
+app.post('/api/discord/messages-between', middleware.checkAuthUser, dcController.getBetweenMessages)
 
 app.post('/api/discord/send-message', middleware.checkAuthUser, dcController.sendMessage)
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Rodando na porta: http://192.168.199.50:${PORT}`);
+    console.log(`Rodando na porta: http://${process.env.SERVER}:${PORT}`);
 
 });

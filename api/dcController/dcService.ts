@@ -31,6 +31,38 @@ function formatDate (dateStr) {
     
 }
 
+exports.getRecorentMessages = async (req, res) => 
+{
+    const channel = await client.channels.fetch(channelID);
+
+    if(!channel.isTextBased())
+    {
+        return res.status(400).json({
+            success: false,
+            message: 'Canal não encontrado'
+        });
+    }
+
+    const messages = await channel.messages.fetch({ limit: 100 });
+
+    try {
+        res.status(200).json({
+            success: true,
+            messages: messages
+                      .filter(msg => msg.content.toLowerCase().includes('sat'))
+                      .map(msg => ({
+                            author: msg.author.tag,
+                            message: msg.content,
+                            date: msg.createdAt.toLocaleString('pt-BR')
+                      }))
+        });
+
+    } catch (error) {
+        
+    }
+
+}
+
 exports.getAllMessages = async (req, res) => {
     try {
         const channel = await client.channels.fetch(channelID);
@@ -131,7 +163,6 @@ exports.getBetweenMessages = async (req, res) => {
 }
 
 exports.sendMessage = async (req, res) => {
-
     let { message, amount } = req.body;
     const auxAmount = amount
 
@@ -159,6 +190,7 @@ exports.sendMessage = async (req, res) => {
             success: false,
             message: 'Houve um erro durante o envio: ',
             erro: error
+
         });
 
     } finally {
@@ -168,3 +200,4 @@ exports.sendMessage = async (req, res) => {
         });
     }
 }
+
