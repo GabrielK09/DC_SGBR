@@ -32,5 +32,4 @@ export function checkAuthUser(req, res, next)
         });
         next();
     }
-    
 }
