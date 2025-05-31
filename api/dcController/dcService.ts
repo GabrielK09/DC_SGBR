@@ -42,16 +42,19 @@ exports.getRecorentMessages = async (req, res) =>
 
     const messages = await channel.messages.fetch({ limit: 100 });
 
+    const nfces = ['nfce', 'nfc-e']
+    const sats = ['SAT', 'SAT C#'];
+
     const satMessages = messages
-                      .filter(msg => msg.content.toLowerCase().includes('sat'))
+                      .filter(msg => 
+                            sats.some(sat => msg.content.toLowerCase().includes(sat)))
                       .map(msg => ({
                             author: msg.author.tag,
                             message: msg.content,
                             date: msg.createdAt.toLocaleString('pt-BR')
                       }));
 
-    const nfces = ['nfce', 'nfc-e']
-    const nfceMessages = messages
+        const nfceMessages = messages
                       .filter(msg => 
                                 nfces.some(nfce => msg.content.toLowerCase().includes(nfce))
                             )
@@ -71,7 +74,9 @@ exports.getRecorentMessages = async (req, res) =>
     } catch (error) {
         fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
             if(err) throw err;
+
         });
+
     }
 }
 
@@ -128,6 +133,11 @@ exports.getAllMessages = async (req, res) => {
 exports.getBetweenMessages = async (req, res) => {
     const { start, end } = req.body;
     
+    fs.appendFile('log/logs.log', `-- Datas recebidas: Start: ${start} e End: ${end} -- \n`, function (err) {
+        if(err) throw err;
+
+    });
+
     const channel = await client.channels.fetch(channelID);
 
     try {
@@ -144,12 +154,15 @@ exports.getBetweenMessages = async (req, res) => {
 
         const filtredMessage = messages.
             filter(msg => {
-                fs.appendFile('log/logs.log', `Data de criação da mensagem: ${format(msg.createdAt, 'dd-MM-yyyy')}\n`, function (err) {
+                fs.appendFile('log/logs.log', `
+                                                Data de criação da mensagem: ${format(msg.createdAt, 'dd/MM/yyyy')} x \n
+                                                Data de inico: ${start} - Data de fim: ${end}
+                                              `, function (err) {
                     if(err) throw err;
 
                 });
 
-                return format(msg.createdAt, 'dd-MM-yyyy') >= start && format(msg.createdAt, 'dd-MM-yyyy') <= end && msg.content.toLowerCase().includes('puxei')
+                return format(msg.createdAt, 'dd/MM/yyyy') >= start && format(msg.createdAt, 'dd/MM/yyyy') <= end && msg.content.toLowerCase().includes('puxei')
                 
             })
 
@@ -172,6 +185,7 @@ exports.getBetweenMessages = async (req, res) => {
     } catch (error) {
         fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
             if(err) throw err;
+
         });
         res.status(500).json({
             success: false,

@@ -92,27 +92,11 @@
         showButton.value = true
     }
 
-    const formatDate = (dateStr: string) => {
-        const date = new Date(dateStr);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`
-        
-    }
-
     const count = async () => {
         group.value = null;
         countPuxei.value = 0;
         loandig.value = true;
 
-        const startDate = new Date(start.value + 'T00:00:00');
-        const endDate = new Date(end.value + 'T00:00:00');
-
-        console.log('start', format(startDate, 'dd/MM/yyyy'));
-        console.log('end', format(endDate, 'dd/MM/yyyy'));
-
-        /*
         try {
             if(!start.value && !end.value)
             {
@@ -136,9 +120,12 @@
             
             if(start.value && end.value)
             {
+                const startDate = new Date(start.value + 'T00:00:00');
+                const endDate = new Date(end.value + 'T00:00:00');  
+
                 const res = await api.post('/messages-between', {
-                    start: formatDate(start.value),
-                    end: formatDate(end.value)
+                    start: format(startDate, 'dd/MM/yyyy'),
+                    end: format(endDate, 'dd/MM/yyyy')
                 }, {
                     headers: {
                         "Content-Type": "application/json",
@@ -164,7 +151,7 @@
             
         } finally {
             loandig.value = false
-        }*/
+        }
     }
     
     onMounted(() => {
