@@ -1,9 +1,10 @@
 import { Client, GatewayIntentBits, TextChannel } from 'discord.js'
 import * as fs from 'fs';
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 
 require('dotenv').config()
 
+const LIMIT = 100;
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -23,7 +24,7 @@ client.once('ready', async () => {
 // Token do bot
 client.login(process.env.BOT_TOKEN); 
 
-function winners() 
+exports.getWinners = async (req, res) => 
 {
 
 }
@@ -40,7 +41,7 @@ exports.getRecorentMessages = async (req, res) =>
         });
     }
 
-    const messages = await channel.messages.fetch({ limit: 100 });
+    const messages = await channel.messages.fetch({ limit: LIMIT });
 
     const nfces = ['nfce', 'nfc-e']
     const sats = ['SAT', 'SAT C#'];
@@ -73,7 +74,7 @@ exports.getRecorentMessages = async (req, res) =>
 
     } catch (error) {
         fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
-            if(err) throw err;
+            if(err) console.error('Erro: ', err);
 
         });
 
@@ -82,7 +83,6 @@ exports.getRecorentMessages = async (req, res) =>
 
 exports.getAllMessages = async (req, res) => {
     try {
-        fs.appendFile
         const channel = await client.channels.fetch(channelID);
 
         if(!channel.isTextBased())
@@ -93,7 +93,7 @@ exports.getAllMessages = async (req, res) => {
             });
         }
 
-        const messages = await channel.messages.fetch({ limit: 100 });
+        const messages = await channel.messages.fetch({ limit: LIMIT });
 
         const messageList = messages
             .filter(msg => msg.content.toLowerCase().includes('puxei'))
@@ -105,7 +105,7 @@ exports.getAllMessages = async (req, res) => {
             }));
 
         fs.appendFile('messages/messages.json', JSON.stringify(messageList, null, 2) + '\n', function (err) {
-            if (err) throw err;
+            if(err) console.error('Erro: ', err);
         })
 
         res.status(200).json({
@@ -116,7 +116,7 @@ exports.getAllMessages = async (req, res) => {
         
     } catch (error) {
         fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
-            if(err) throw err;
+            if(err) console.error('Erro: ', err);
 
         });
 
@@ -134,7 +134,7 @@ exports.getBetweenMessages = async (req, res) => {
     const { start, end } = req.body;
     
     fs.appendFile('log/logs.log', `-- Datas recebidas: Start: ${start} e End: ${end} -- \n`, function (err) {
-        if(err) throw err;
+        if(err) console.error('Erro: ', err);
 
     });
 
@@ -150,19 +150,26 @@ exports.getBetweenMessages = async (req, res) => {
             });
         }
 
-        const messages = await channel.messages.fetch({ limit: 100 });
+        const messages = await channel.messages.fetch({ limit: LIMIT });
+
+        const startDate = parse(start, 'dd/MM/yyyy', new Date());
+        const endDate = parse(end, 'dd/MM/yyyy', new Date());
 
         const filtredMessage = messages.
             filter(msg => {
-                fs.appendFile('log/logs.log', `
-                                                Data de criação da mensagem: ${format(msg.createdAt, 'dd/MM/yyyy')} x \n
-                                                Data de inico: ${start} - Data de fim: ${end}
-                                              `, function (err) {
-                    if(err) throw err;
+                fs.appendFile('log/logs.log', `Data de criação da mensagem: ${format(msg.createdAt, 'dd/MM/yyyy')}\n`, function (err) {
+                    if(err) console.error('Erro: ', err);
 
                 });
 
-                return format(msg.createdAt, 'dd/MM/yyyy') >= start && format(msg.createdAt, 'dd/MM/yyyy') <= end && msg.content.toLowerCase().includes('puxei')
+                const msgDate = parse(format(msg.createdAt, 'dd/MM/yyyy'), 'dd/MM/yyyy', new Date());
+
+                return (
+                        msgDate >= startDate && 
+                        msgDate <= endDate && 
+                        msg.content.toLowerCase().includes('puxei')
+
+                    );
                 
             })
 
@@ -184,7 +191,7 @@ exports.getBetweenMessages = async (req, res) => {
         
     } catch (error) {
         fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
-            if(err) throw err;
+            if(err) console.error('Erro: ', err);
 
         });
         res.status(500).json({
@@ -220,7 +227,7 @@ exports.sendMessage = async (req, res) => {
         
     } catch (error) {
         fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
-            if(err) throw err;
+            if(err) console.error('Erro: ', err);
             
         });
         return res.status(500).json({

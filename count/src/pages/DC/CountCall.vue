@@ -96,9 +96,10 @@
         group.value = null;
         countPuxei.value = 0;
         loandig.value = true;
+        errorMessage.value = '';
 
         try {
-            if(!start.value && !end.value)
+            if(!start.value && !end.value) // not between
             {
                 const res = await api.get('/messages', {
                     headers: {
@@ -108,8 +109,8 @@
                     }
                 });
 
-                console.log('Buscando sem filtro')
                 const messageData: msgType[] = res.data.messages;
+                
                 messages.value = messageData;
                 
                 const count = messages.value.filter(m => m.message.toLowerCase().includes(option.value.value)).length;
@@ -118,7 +119,7 @@
                 countPuxei.value += count
             }
             
-            if(start.value && end.value)
+            if(start.value && end.value) // not between
             {
                 const startDate = new Date(start.value + 'T00:00:00');
                 const endDate = new Date(end.value + 'T00:00:00');  
@@ -140,6 +141,7 @@
                 messages.value = messageData;
                 
                 const count = messages.value.filter(m => m.message.toLowerCase().includes(option.value.value)).length;
+            
                 group.value = option.value.group
                 countPuxei.value += count;
             }
