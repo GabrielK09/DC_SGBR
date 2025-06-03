@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-export function checkAuthUser(req, res, next)
+function checkAuthUser(req, res, next)
 {
     try {
         fs.appendFile('log/logs.log', `Começo da validação do token dentro do try: \n`, function (err) {
@@ -33,3 +33,5 @@ export function checkAuthUser(req, res, next)
         next();
     }
 }
+
+export default { checkAuthUser };

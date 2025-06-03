@@ -1,8 +1,9 @@
 import { Client, GatewayIntentBits, TextChannel } from 'discord.js'
 import * as fs from 'fs';
 import { format, parse } from 'date-fns'
+import * as dotenv from 'dotenv';
 
-require('dotenv').config()
+dotenv.config();
 
 const LIMIT = 100;
 const client = new Client({
@@ -17,19 +18,20 @@ const client = new Client({
 const channelID = process.env.CHANNEL_ID;
 
 client.once('ready', async () => {
-    console.log(`Bot conectado como ${client.user.tag}`);
+    console.log(`Bot conectado como ${client.user?.tag}`);
 
 });
 
 // Token do bot
 client.login(process.env.BOT_TOKEN); 
 
-exports.getWinners = async (req, res) => 
-{
+async function getWinners (req, res) 
+{   
+
 
 }
 
-exports.getRecorentMessages = async (req, res) => 
+async function getRecorentMessages (req, res)
 {
     const channel = await client.channels.fetch(channelID);
 
@@ -81,7 +83,8 @@ exports.getRecorentMessages = async (req, res) =>
     }
 }
 
-exports.getAllMessages = async (req, res) => {
+async function getAllMessages(req, res) 
+{
     try {
         const channel = await client.channels.fetch(channelID);
 
@@ -110,8 +113,10 @@ exports.getAllMessages = async (req, res) => {
 
         res.status(200).json({
             success: true,
+            amout: messageList.length,
             message: 'Mensagens: ',
             messages: messageList
+
         });
         
     } catch (error) {
@@ -130,7 +135,8 @@ exports.getAllMessages = async (req, res) => {
     } 
 }
 
-exports.getBetweenMessages = async (req, res) => {
+async function getBetweenMessages (req, res)
+{
     const { start, end } = req.body;
     
     fs.appendFile('log/logs.log', `-- Datas recebidas: Start: ${start} e End: ${end} -- \n`, function (err) {
@@ -202,7 +208,8 @@ exports.getBetweenMessages = async (req, res) => {
     }
 }
 
-exports.sendMessage = async (req, res) => {
+async function sendMessage(req, res)
+{
     let { message, amount } = req.body;
     const auxAmount = amount
 
@@ -245,3 +252,4 @@ exports.sendMessage = async (req, res) => {
     }
 }
 
+export default {getRecorentMessages, getBetweenMessages, getAllMessages, sendMessage, getWinners }

@@ -1,10 +1,12 @@
-const express = require('express');
-const cors = require('cors');
-const dcController = require('./dcController/dcService.ts');
-const middleware = require('./middleware/checkUser.ts');
+import express from 'express';
+import cors from 'cors';
+import dcController from './dcController/dcService.js';
+import middleware from './middleware/checkUser.js';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
-require('dotenv').config();
 const PORT = process.env.PORT
 
 app.use(express.json())
