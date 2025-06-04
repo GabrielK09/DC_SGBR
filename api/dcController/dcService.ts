@@ -47,6 +47,7 @@ async function getWinners (req, res)
 
     let lastMessageID = null;
     let finish: boolean = false;
+    let allMesages = [];
 
     fs.appendFile('log/logs.log', 'Entrando no while', function (err) {
         if(err) console.error('Erro: ', err);
@@ -59,37 +60,57 @@ async function getWinners (req, res)
 
         if(messages.size === 0 ) break;
 
-        messages
-            .filter(msg => {
+            const filterMessage = messages
+                .filter(msg => {
                 fs.appendFile('log/logs.log', 'Entrou no filter \n', function (err) {
                     if(err) console.error('Erro: ', err);
                     
                 });
+
                 const msgDate = parse(format(msg.createdAt, 'dd/MM/yyyy'), 'dd/MM/yyyy', new Date());
                 lastMessageID = msg.id;
-                return (
-                    finish = true &&
-                    msgDate < endDate
 
-                );
+                if(msgDate < endDate)
+                {
+                    fs.appendFile('log/log_message_1.log', `Mensagens encontradas: ${msg.content} | criada: ${msg.createdAt} | ID: ${msg.id} \n`, function (err) {
+                        if(err) console.error('Erro: ', err);
+                        
+                    });
+                    
+                } else {
+                    fs.appendFile('log/log_message_2.log', `Mensagem encontrada, fim do cilco: ${msg.content} | criada: ${msg.createdAt} | ID: ${msg.id}  \n`, function (err) {
+                        if(err) console.error('Erro: ', err);
+                        
+                    });
+                    finish = true;
+                    
+                }
+                
             })
-            .map(msg => (
+            .map(msg => {
                 fs.appendFile('log/logs.log', 'Entrou no map \n', function (err) {
                     if(err) console.error('Erro: ', err);
                     
-                }),
-            {   
-                message: msg.content,
-                id: msg.id,
-                create: msg.createdAt
+                });
 
-            }))
+                const msgDate = parse(format(msg.createdAt, 'dd/MM/yyyy'), 'dd/MM/yyyy', new Date());
+
+                return {
+                    message: msg.content,
+                    id: msg.id,
+                    create: msgDate
+
+                };
+            });
+
+        allMesages = allMesages.concat(filterMessage);
     }
 
     return res.status(200).json({
         message: 'ID encontrado',
-        id: lastMessageID
-    })
+        id: lastMessageID,
+        messageContent: allMesages.find(msg => msg.id === lastMessageID)
+    });
 }
 
 async function getRecorentMessages (req, res)

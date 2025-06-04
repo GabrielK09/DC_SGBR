@@ -3,7 +3,7 @@ import * as fs from 'fs';
 function checkAuthUser(req, res, next)
 {
     try {
-        fs.appendFile('log/logs.log', `Começo da validação do token dentro do try: \n`, function (err) {
+        fs.appendFile('log/log_middleware.log', `Começo da validação do token dentro do try: \n`, function (err) {
             if(err) throw err;
         });
 
