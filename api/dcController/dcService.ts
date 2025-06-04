@@ -25,10 +25,71 @@ client.once('ready', async () => {
 // Token do bot
 client.login(process.env.BOT_TOKEN); 
 
+async function getLastMessageID()
+{
+
+}
+
 async function getWinners (req, res) 
 {   
+    const { end } = req.body;
+    const endDate = parse(end, 'dd/MM/yyyy', new Date());
 
+    const channel = await client.channels.fetch(channelID);
 
+    if(!channel.isTextBased())
+    {
+        return res.status(400).json({
+            success: false,
+            message: 'Canal não encontrado'
+        });
+    }
+
+    let lastMessageID = null;
+    let finish: boolean = false;
+
+    fs.appendFile('log/logs.log', 'Entrando no while', function (err) {
+        if(err) console.error('Erro: ', err);
+        
+    });
+
+    while (!finish) 
+    {
+        const messages = await channel.messages.fetch({ limit: LIMIT, before: lastMessageID });
+
+        if(messages.size === 0 ) break;
+
+        messages
+            .filter(msg => {
+                fs.appendFile('log/logs.log', 'Entrou no filter \n', function (err) {
+                    if(err) console.error('Erro: ', err);
+                    
+                });
+                const msgDate = parse(format(msg.createdAt, 'dd/MM/yyyy'), 'dd/MM/yyyy', new Date());
+                lastMessageID = msg.id;
+                return (
+                    finish = true &&
+                    msgDate < endDate
+
+                );
+            })
+            .map(msg => (
+                fs.appendFile('log/logs.log', 'Entrou no map \n', function (err) {
+                    if(err) console.error('Erro: ', err);
+                    
+                }),
+            {   
+                message: msg.content,
+                id: msg.id,
+                create: msg.createdAt
+
+            }))
+    }
+
+    return res.status(200).json({
+        message: 'ID encontrado',
+        id: lastMessageID
+    })
 }
 
 async function getRecorentMessages (req, res)
@@ -103,7 +164,8 @@ async function getAllMessages(req, res)
             .map(msg => ({
                 author: msg.author.tag,
                 message: msg.content,
-                date: msg.createdAt.toLocaleString('pt-BR')
+                date: msg.createdAt.toLocaleString('pt-BR'),
+                message_id: msg.id
 
             }));
 
