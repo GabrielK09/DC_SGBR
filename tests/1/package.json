@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
-    "test": "npx ts-node app.ts"
+    "test-app": "npx ts-node app.ts",
+    "test-fn": "npx ts-node functionSetWinners.ts",
+    "test-str": "npx ts-node str.ts"
   },
   "author": "",
   "license": "ISC",

@@ -6,6 +6,10 @@
         
         <ul class="ul-itens">
             <li class="link">
+                <router-link to="/check-winners" class="links">Vencedores</router-link>
+            </li>
+
+            <li class="link">
                 <router-link to="/counter" class="links">Contagem de ligações</router-link>
             </li>
 

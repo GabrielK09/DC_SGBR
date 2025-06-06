@@ -1,19 +1,23 @@
 import { format, parse } from 'date-fns';
 
-const currentDate = format(new Date, 'dd/MM/yyyy');
-const inputDate = '01/06/2025';
+const currentDate = new Date();
+const currentDateFormated = parse(format(currentDate, 'dd/MM/yyyy'), 'dd/MM/yyyy', new Date());
+const inputDate = parse('31/05/2025', 'dd/MM/yyyy', new Date());
 
-if(currentDate < inputDate)
+if(currentDateFormated > inputDate)
 {
-    console.log('Data de hoje menor que a data de entrada');
-    console.log('Type: ', typeof currentDate, ' inputDate:', typeof inputDate)
+    console.log('Data atual: ', currentDateFormated);
+    console.log('Data de entrada: ', inputDate);
+    console.log('Data de hoje é maior');
 
-} else if (currentDate > inputDate){
-    console.log('Data de hoje maior que a data de entrada');
-    console.log('Type: ', typeof currentDate, ' inputDate:', typeof inputDate)
+} else if (currentDateFormated < inputDate) {
+    console.log('Data atual: ', currentDateFormated);
+    console.log('Data de entrada: ', inputDate);
+    console.log('Data de hoje é menor');
 
 } else {
+    console.log('Data atual: ', currentDateFormated);
+    console.log('Data de entrada: ', inputDate);
     console.log('Datas iguais');
-    console.log('Type: ', typeof currentDate, ' inputDate:', typeof inputDate)
     
 }
