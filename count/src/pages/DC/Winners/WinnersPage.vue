@@ -40,10 +40,10 @@
         {{ loanding }}
     </div>
     <div class="" v-else>
-        <div v-if="listWinners.length > 0">
-            <div v-for="winners in listWinners">
+        <div v-if="listAllWinners.length > 0">
+            <div v-for="winners in listAllWinners">
                 <div class="mt-4">
-                    <span>Cor: {{ winners.color }}</span> |
+                    <span>Equipe: {{ winners.color }}</span> |
                     <span>Pontos: {{ winners.score }}</span>
 
                 </div>
@@ -51,12 +51,12 @@
             <q-btn 
                 :data-clipboard-text="messageToClip"
                 @click="clipBoardBtn"
-                label="OK" 
+                label="Cópiar mensagem" 
                 class="btn"
             />
         </div> 
 
-        <div class="bg-red-600 text-center mt-3 rounded" v-if="errorMessage">
+        <div class="bg-red-600 text-center mt-3 p-2 rounded" v-if="errorMessage">
             <span class="text-white">{{ errorMessage }}</span>
 
         </div> 
@@ -70,39 +70,40 @@
     import { format, parse } from 'date-fns';
     import clipBoard from 'src/services/clipBoard';
     
+    type winners = {
+        label: string,
+        color: string,
+        score: number
+    }
+
     const $q = useQuasar();
+    const GOAL = 20;
     const after: any = ref(null);
     const before: any = ref(null);
-    const listWinners: any = ref([]);
     const errorMessage: any = ref('');
     const successClip: any = ref(false);
     const messageToClip: any = ref('');
     const loanding: any = ref(false);
-    let timer: any;
+    const listAllWinners: any = ref([]);
+    const listWinners: any = ref([]);
 
     const showLoanding = () => {
         $q.loading.show({
             message: 'Buscando dados ...'
         });
 
-        timer = setTimeout(() => {
-            $q.loading.hide()
-            timer = void 0;
-        }, 2000);
-
     };
 
     const hideLoanding = () => {
-        if(timer !== void 0)
-        {
-            clearTimeout(timer)
-            $q.loading.hide();
-            
-        }
+        $q.loading.hide();
     }
 
     const getWinners = async () => {
         showLoanding()
+        listAllWinners.value = [];
+        listWinners.value = [];
+        messageToClip.value = '';
+
         try {
             const afterDate = new Date(after.value + 'T00:00:00');
             const beforeDate = new Date(before.value + 'T00:00:00');
@@ -120,19 +121,48 @@
             });
 
             const data = res.data;
+            console.log(data);
 
             if(data.success)
             {
-                listWinners.value = data.winners;
+                listAllWinners.value = data.winners;                
+                listAllWinners.value.map((c: winners) => {
+                    if(c.score >= GOAL)
+                    {
+                        listWinners.value.push(c);
+                        
+                    };
+                });
 
-                messageToClip.value = `Equipes vencedoras ${listWinners.value[0].color}`
-                hideLoanding();
+                if(listWinners.value.length > 0)
+                {
+                    messageToClip.value = `                
+Bom dia pessoal
 
+Segue as equipes que conseguiram atingir a meta semanal:
+${listWinners.value.map((c: winners) =>  `Equipe: ${c.color}, pontos: ${c.score};` ).join('\n')}
+Para as equipes acima, fica liberado o energético, salgadinho, refri e play.
+
+As demais equipes permanecem sem as regalias acima.
+
+EQUIPE DESTAQUE DA SEMANA:
+${listWinners.value[0].color} com ${listWinners.value[0].score} pontos 👏🏼
+`
+                }
+                
+                console.log('listWinners ', listWinners.value);
+            } else {
+                console.log(data)
             };
             
         } catch (error) {
             console.error('Erro: ', error)
-        };
+            errorMessage.value = error
+
+        } finally {
+            hideLoanding();
+
+        }
     };
 
     const clipBoardBtn = async () => {

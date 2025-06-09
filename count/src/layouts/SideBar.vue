@@ -4,7 +4,7 @@
             v-if="user"
         />
         
-        <ul class="ul-itens">
+        <ul class="ul-itens ml-5">
             <li class="link">
                 <router-link to="/check-winners" class="links">Vencedores</router-link>
             </li>

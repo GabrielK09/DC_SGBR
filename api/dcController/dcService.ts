@@ -63,7 +63,7 @@ function selectWinners(messages: bodyMessage[])
         {
             const element: bodyMessage = messages[message];
             const lastColor: string = element.content.trim().split(' ').pop();
-            console.log(lastColor);
+            
             const counter = count.find(c => c.color === lastColor);
 
             if(counter) counter.score += 1;
@@ -79,7 +79,7 @@ function orderWinners(colorScore: winner[])
     
     const sorted = [...colorScore].sort((a, b) => b.score - a.score);
 
-    const winners = sorted.filter(w => w.score < GOAL);
+    const winners = sorted.filter(w => w.score > GOAL);
 
     return winners;
     
@@ -170,7 +170,7 @@ async function getWinners (req, res)
     }
 
     const winners = selectWinners(allMesages);
-
+    
     if(winners)
     {
         return res.status(200).json({
@@ -187,14 +187,6 @@ async function getWinners (req, res)
             
         });
     }
-
-    /*return res.status(200).json({
-        success: true,
-        message: 'ID encontrado',
-        id: lastMessageID,
-        messageContent: allMesages
-
-    });*/
 }
 
 async function getRecorentMessages (req, res)

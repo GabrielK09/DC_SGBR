@@ -4,7 +4,7 @@
             @submit="acessLogin"
             class="q-gutter-md forms"
         >
-            <h3>Login</h3>
+            <h1>Login</h1>
             <div class="bar"></div>
         
             <q-input 
@@ -76,11 +76,6 @@
 </script>
 
 <style lang="scss">
-    h2 {
-        color: #000;
-        
-    }
-
     .bar{
         border-bottom: solid 1px #ccc;
 
