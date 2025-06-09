@@ -1,65 +1,74 @@
 <template>
     <div>
-        <h5>Checar Vencedores</h5>
+        <h1 class="text-3xl mt-10">Checar Vencedores</h1>
 
     </div>
 
-    <div class="">
-        <q-form
-            @submit="getWinners"
-            class="q-gutter-md"
-        >
-            <q-input 
-                v-model="after" 
-                type="date" 
-                label="Antes" 
-                :rules = "[
-                    val => !!val || `O campo ANTES é obrigatório`
-                ]"
-            />
-            
-            <q-input 
-                v-model="before" 
-                type="date" 
-                label="Depois" 
-                :rules = "[
-                    val => !!val || `O campo DEPOIS é obrigatório`
-                ]"
-            />
-
-            <q-btn
-                label="Buscar" 
-                type="submit"
-                class="mt-2"
-            />
+    <div class="flex">
+        <div class="">
+            <q-form
+                @submit="getWinners"
+                class="q-gutter-md mt-5"
+            >
+                <q-input 
+                    v-model="after" 
+                    type="date" 
+                    label="Antes" 
+                    :rules = "[
+                        val => !!val || `O campo ANTES é obrigatório`
+                    ]"
+                />
                 
-        </q-form>
+                <q-input 
+                    v-model="before" 
+                    type="date" 
+                    label="Depois" 
+                    :rules = "[
+                        val => !!val || `O campo DEPOIS é obrigatório`
+                    ]"
+                />
 
-    </div>
-    <div v-if="loanding">
-        {{ loanding }}
-    </div>
-    <div class="" v-else>
-        <div v-if="listAllWinners.length > 0">
-            <div v-for="winners in listAllWinners">
-                <div class="mt-4">
-                    <span>Equipe: {{ winners.color }}</span> |
-                    <span>Pontos: {{ winners.score }}</span>
+                <q-btn
+                    label="Buscar" 
+                    type="submit"
+                    class="mt-2"
+                    color="blue"
+                    
+                />
+                    
+            </q-form>
 
+        </div>
+        
+        <div class="mt-5 ml-52 text-2xl">
+            <div v-if="listAllWinners.length > 0">
+                <div v-for="winners in listAllWinners" class="m-2 mb-8">
+                    <div class="mt-4">
+                        <span>Equipe: {{ winners.color }}</span> |
+                        <span>Pontos: {{ winners.score }}</span>
+
+                    </div>
                 </div>
+
+                <q-btn 
+                    :data-clipboard-text="messageToClip"
+                    @click="clipBoardBtn"
+                    label="Cópiar mensagem" 
+                    class="btn"
+                    color="blue"
+                />
+
+            </div> 
+            <div class="" v-else>
+                <span>Sem dados</span>
+
             </div>
-            <q-btn 
-                :data-clipboard-text="messageToClip"
-                @click="clipBoardBtn"
-                label="Cópiar mensagem" 
-                class="btn"
-            />
-        </div> 
 
-        <div class="bg-red-600 text-center mt-3 p-2 rounded" v-if="errorMessage">
-            <span class="text-white">{{ errorMessage }}</span>
+            <div class="bg-red-600 text-center mt-3 p-2 rounded" v-if="errorMessage">
+                <span class="text-white">{{ errorMessage }}</span>
 
-        </div> 
+            </div> 
+        </div>
     </div>
 </template>
 
