@@ -1,5 +1,5 @@
 <template>
-    <div class="side-bar">
+    <div class="side-bar bg-black">
         <Images
             v-if="user"
         />
@@ -83,7 +83,7 @@
     .side-bar {
         display: flex;
         flex-direction: column;
-        background: #0C120C;
+        
         width: 15rem;
         height: 100vh;
 

@@ -19,7 +19,13 @@ const routes: RouteRecordRaw[] = [
         path: '/send-message',
         component: () => import('pages/DC/SendMessage.vue'),
         name: 'SendMessage'
-      }
+      },
+      {
+        path: '/check-winners',
+        component: () => import('pages/DC/Winners/WinnersPage.vue'),
+        name: 'WinnersPage'
+      },
+      
     ]
   },
   {

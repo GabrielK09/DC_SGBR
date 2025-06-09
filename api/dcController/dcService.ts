@@ -87,6 +87,7 @@ function orderWinners(colorScore: winner[])
 
 async function getWinners (req, res) 
 {   
+    console.log('Chamou o getWinners')
     const { after, before } = req.body;
 
     if(!after || !before)
