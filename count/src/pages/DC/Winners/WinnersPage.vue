@@ -1,44 +1,41 @@
 <template>
-    <div>
-        <h1 class="text-3xl mt-10">Checar Vencedores</h1>
-
-    </div>
+    <h1 class="text-3xl mt-10">Checar Vencedores</h1>
 
     <div class="flex">
-        <div class="">
-            <q-form
-                @submit="getWinners"
-                class="q-gutter-md mt-5"
-            >
-                <q-input 
-                    v-model="after" 
-                    type="date" 
-                    label="Antes" 
-                    :rules = "[
-                        val => !!val || `O campo ANTES é obrigatório`
-                    ]"
-                />
+        <q-form
+            @submit="getWinners"
+            class="q-gutter-md mt-5"
+        >
+            <q-input 
+                v-model="after" 
+                type="date" 
+                label="Antes" 
+                class="w-52"
+                :rules = "[
+                    val => !!val || `O campo ANTES é obrigatório`
+
+                ]"
+            />
+            
+            <q-input 
+                v-model="before" 
+                type="date" 
+                label="Depois" 
+                :rules = "[
+                    val => !!val || `O campo DEPOIS é obrigatório`
+
+                ]"
+            />
+
+            <q-btn
+                label="Buscar" 
+                type="submit"
+                class="mt-2"
+                color="blue"
+
+            />
                 
-                <q-input 
-                    v-model="before" 
-                    type="date" 
-                    label="Depois" 
-                    :rules = "[
-                        val => !!val || `O campo DEPOIS é obrigatório`
-                    ]"
-                />
-
-                <q-btn
-                    label="Buscar" 
-                    type="submit"
-                    class="mt-2"
-                    color="blue"
-                    
-                />
-                    
-            </q-form>
-
-        </div>
+        </q-form>
         
         <div class="mt-5 ml-52 text-2xl">
             <div v-if="listAllWinners.length > 0">
@@ -56,13 +53,28 @@
                     label="Cópiar mensagem" 
                     class="btn"
                     color="blue"
+
+                />
+                
+                <q-btn 
+                    :data-clipboard-text="messageToClip"
+                    @click="reset"
+                    label="Ok" 
+                    class="btn ml-4"
+                    color="blue"
+                    
                 />
 
+                <div class="mt-5 p-1 bg-green-400 text-white rounded cursor-pointer" v-if="successClip" @click="successClip = false">
+                    <span class="flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mt-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                        </svg>
+                        Mensagem copiada com sucesso!
+                    </span>
+                </div>
+    
             </div> 
-            <div class="" v-else>
-                <span>Sem dados</span>
-
-            </div>
 
             <div class="bg-red-600 text-center mt-3 p-2 rounded" v-if="errorMessage">
                 <span class="text-white">{{ errorMessage }}</span>
@@ -75,8 +87,8 @@
 <script setup lang="ts">
     import { LocalStorage, useQuasar } from 'quasar';
     import { api } from 'src/boot/axios';
-    import { ref, onBeforeMount } from 'vue';
-    import { format, parse } from 'date-fns';
+    import { ref } from 'vue';
+    import { format } from 'date-fns';
     import clipBoard from 'src/services/clipBoard';
     
     type winners = {
@@ -184,4 +196,8 @@ ${listWinners.value[0].color} com ${listWinners.value[0].score} pontos 👏🏼
             
         };
     };
+
+    const reset = () => {
+        window.location.reload()
+    }
 </script>
