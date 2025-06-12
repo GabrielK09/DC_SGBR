@@ -4,7 +4,7 @@
             @submit="acessLogin"
             class="q-gutter-md forms"
         >
-            <h1>Login</h1>
+            <h1 class="text-3xl">Login</h1>
             <div class="bar"></div>
         
             <q-input 
@@ -43,7 +43,6 @@
     import { useRouter } from 'vue-router'
 
     const route = useRouter();
-    const token: any = ref(null);
     const cpf: any = ref('')
     const password: any = ref('')
 
@@ -85,7 +84,7 @@
         width: 100vw;
         height: 70vh;
         display: flex;
-        flex-direction: row;
+        
         align-items: center;
         justify-content: center;
         

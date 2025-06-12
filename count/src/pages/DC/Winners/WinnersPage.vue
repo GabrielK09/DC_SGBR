@@ -79,8 +79,8 @@
 
             <div class="bg-red-600 text-center mt-3 p-2 rounded" v-if="errorMessage">
                 <span class="text-white">{{ errorMessage }}</span>
-
-            </div> 
+            
+            </div>
         </div>
     </div>
 </template>
@@ -88,8 +88,8 @@
 <script setup lang="ts">
     import { LocalStorage, useQuasar } from 'quasar';
     import { api } from 'src/boot/axios';
-    import { ref, onBeforeMount } from 'vue';
-    import { format, parse } from 'date-fns';
+    import { ref } from 'vue';
+    import { format } from 'date-fns';
     import clipBoard from 'src/services/clipBoard';
     
     type winners = {
@@ -197,4 +197,8 @@ ${listWinners.value[0].color} com ${listWinners.value[0].score} pontos 👏🏼
             
         };
     };
+
+    const reset = () => {
+        window.location.reload()
+    }
 </script>

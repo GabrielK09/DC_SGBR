@@ -344,6 +344,7 @@ async function sendMessage(req, res)
             if(err) console.error('Erro: ', err);
             
         });
+        
         return res.status(500).json({
             success: false,
             message: 'Houve um erro durante o envio: ',
