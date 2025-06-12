@@ -1,65 +1,87 @@
 <template>
-    <div>
-        <h5>Checar Vencedores</h5>
-
-    </div>
-
-    <div class="">
-        <q-form
-            @submit="getWinners"
-            class="q-gutter-md"
-        >
-            <q-input 
-                v-model="after" 
-                type="date" 
-                label="Antes" 
-                :rules = "[
-                    val => !!val || `O campo ANTES é obrigatório`
-                ]"
-            />
-            
-            <q-input 
-                v-model="before" 
-                type="date" 
-                label="Depois" 
-                :rules = "[
-                    val => !!val || `O campo DEPOIS é obrigatório`
-                ]"
-            />
-
-            <q-btn
-                label="Buscar" 
-                type="submit"
-                class="mt-2"
-            />
+    <div class="text-3xl mt-10">
+        <div v-if="successClip" class="fixed -z-10 bg-green-400 p-1 text-white rounded ">
+            <span class="flex"> 
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                </svg>
+                <span class="mt-auto mb-auto ml-1">Mensagem copiada com sucesso</span>
                 
-        </q-form>
+            </span>
+        </div>
+        
+        <div>
+            <h5>Checar Vencedores</h5>
 
-    </div>
-    <div v-if="loanding">
-        {{ loanding }}
-    </div>
-    <div class="" v-else>
-        <div v-if="listAllWinners.length > 0">
-            <div v-for="winners in listAllWinners">
-                <div class="mt-4">
-                    <span>Equipe: {{ winners.color }}</span> |
-                    <span>Pontos: {{ winners.score }}</span>
+        </div>    
 
+        <div class="">
+            <q-form
+                @submit="getWinners"
+                class="q-gutter-md"
+            >
+                <q-input 
+                    v-model="after" 
+                    type="date" 
+                    label="Antes" 
+                    :rules = "[
+                        val => !!val || `O campo ANTES é obrigatório`,
+                        val => {
+                            if(!val || !before) return true;
+                            return new Date(val) <= new Date(before) ||  'A data de ANTES não pode ser maior que DEPOIS';
+
+                        } 
+                    ]"
+                />
+                
+                <q-input 
+                    v-model="before" 
+                    type="date" 
+                    label="Depois" 
+                    :rules = "[
+                        val => !!val || `O campo DEPOIS é obrigatório`,
+                        val => {
+                            if(!val || !after) return true;
+                            return new Date(val) >= new Date(after) ||  'A data de DEPOIS não pode ser maior que ANTES';
+
+                        } 
+                    ]"
+                />
+
+                <q-btn
+                    label="Buscar" 
+                    type="submit"
+                    class="mt-2"
+                />
+                    
+            </q-form>
+
+        </div>
+        <div v-if="loanding">
+            {{ loanding }}
+        </div>
+        <div class="" v-else>
+            <div v-if="listAllWinners.length > 0">
+                <div v-for="winners in listAllWinners">
+                    <div class="mt-4">
+                        <span>Equipe: {{ winners.color }}</span> |
+                        <span>Pontos: {{ winners.score }}</span>
+
+                    </div>
                 </div>
-            </div>
-            <q-btn 
-                :data-clipboard-text="messageToClip"
-                @click="clipBoardBtn"
-                label="Cópiar mensagem" 
-                class="btn"
-            />
-        </div> 
+                <q-btn 
+                    :data-clipboard-text="messageToClip"
+                    @click="clipBoardBtn"
+                    label="Cópiar mensagem" 
+                    class="btn"
+                />
+            </div> 
 
-        <div class="bg-red-600 text-center mt-3 p-2 rounded" v-if="errorMessage">
-            <span class="text-white">{{ errorMessage }}</span>
+            <div class="bg-red-600 text-center mt-3 p-2 rounded" v-if="errorMessage">
+                <span class="text-white">{{ errorMessage }}</span>
 
-        </div> 
+            </div> 
+        </div>
     </div>
 </template>
 

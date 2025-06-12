@@ -189,58 +189,6 @@ async function getWinners (req, res)
     }
 }
 
-async function getRecorentMessages (req, res)
-{
-    const channel = await client.channels.fetch(channelID);
-
-    if(!channel.isTextBased())
-    {
-        return res.status(400).json({
-            success: false,
-            message: 'Canal não encontrado'
-        });
-    }
-
-    const messages = await channel.messages.fetch({ limit: LIMIT });
-
-    const nfces = ['nfce', 'nfc-e']
-    const sats = ['SAT', 'SAT C#'];
-
-    const satMessages = messages
-                      .filter(msg => 
-                            sats.some(sat => msg.content.toLowerCase().includes(sat)))
-                      .map(msg => ({
-                            author: msg.author.tag,
-                            message: msg.content,
-                            date: msg.createdAt.toLocaleString('pt-BR')
-                      }));
-
-        const nfceMessages = messages
-                      .filter(msg => 
-                                nfces.some(nfce => msg.content.toLowerCase().includes(nfce))
-                            )
-                      .map(msg => ({
-                            author: msg.author.tag,
-                            message: msg.content,
-                            date: msg.createdAt.toLocaleString('pt-BR')
-                      }));
-    
-    try {
-        res.status(200).json({
-            success: true,
-            satMessages: satMessages,
-            nfceMessages: nfceMessages
-        });
-
-    } catch (error) {
-        fs.appendFile('log/logs_error.log', `Erro na validação: ${error} \n`, function (err) {
-            if(err) console.error('Erro: ', err);
-
-        });
-
-    }
-}
-
 async function getAllMessages(req, res) 
 {
     try {
@@ -411,4 +359,4 @@ async function sendMessage(req, res)
     }
 }
 
-export default {getRecorentMessages, getBetweenMessages, getAllMessages, sendMessage, getWinners }
+export default { getBetweenMessages, getAllMessages, sendMessage, getWinners }
